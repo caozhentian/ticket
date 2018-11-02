@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ticket</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="read_card">读卡</string>
+    <string name="auto">自动</string>
+    <string name="typeA">Type A</string>
+    <string name="typeB">Type B</string>
+    <string name="back_light">关背光</string>
+    <string name="usb_host">U Host</string>
+    <string name="record">录音</string>
+    <string name="play">播放</string>
+    <string name="stop">停止</string>
+    <string name="name">姓名</string>
+    <string name="gender">性别</string>
+    <string name="nation">民族</string>
+    <string name="nation_ex">国籍</string>
+    <string name="birthday">出生日期</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="address">地址</string>
+    <string name="idno">身份证号</string>
+    <string name="idno_A">卡号</string>
+    <string name="idno_foreign">永久居留证号码</string>
+    <string name="agency">签发机关</string>
+    <string name="expire">有效期</string>
+    <string name="readcard_hint">请放卡</string>
+    <string name="finger_print">指纹</string>
+    <string name="finger_print_summary">读取指纹信息</string>
+    <string name="finger_print_hint">采集指纹</string>
+    <string name="card_no">卡体管理号:</string>
+    <string name="readCardCid">读取卡体管理号</string>
+</resources>
