@@ -1,343 +1,372 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:layout_width="350dip"
-        android:layout_height="250dip"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dip"
-        android:background="@drawable/idcard" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="270dip"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="40dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/name" />
-
-                <TextView
-                    android:id="@+id/textViewName"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0" />
-            </LinearLayout>
-
-            <!-- 外国人证有英文名和中文名  下面显示是外国人证的中文名    吴冰 2017.8.8 -->
+        <RelativeLayout
+            android:layout_width="350dip"
+            android:layout_height="250dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/idcard">
 
             <LinearLayout
-                android:id="@+id/linearLayoutChName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:visibility="gone" >
+                android:layout_width="270dip"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="46dip"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/name" />
+
+                    <TextView
+                        android:id="@+id/textViewName"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textViewIName"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
+                <!-- 外国人证有英文名和中文名  下面显示是外国人证的中文名    吴冰 2017.8.8 -->
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutChName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0" />
+                    android:layout_marginTop="5dip"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="46dip"
+                        android:layout_height="wrap_content"></LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewIName"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/gender" />
+
+                    <TextView
+                        android:id="@+id/textViewGender"
+                        style="@style/CardInfoText"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/textViewNationTitle"
+                        style="@style/CardInfoTitle"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/nation" />
+
+                    <TextView
+                        android:id="@+id/textViewNation"
+                        style="@style/CardInfoText"
+                        android:layout_width="80dip"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="60dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/birthday" />
+
+                    <TextView
+                        android:id="@+id/textViewYear"
+                        style="@style/CardInfoText"
+                        android:layout_width="35dip"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="20dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dip"
+                        android:text="@string/year" />
+
+                    <TextView
+                        android:id="@+id/textViewMonth"
+                        style="@style/CardInfoText"
+                        android:layout_width="20dip"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="20dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dip"
+                        android:text="@string/month" />
+
+                    <TextView
+                        android:id="@+id/textViewDay"
+                        style="@style/CardInfoText"
+                        android:layout_width="20dip"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="20dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dip"
+                        android:text="@string/day" />
+                </LinearLayout>
+
+                <!-- 外国人证没有地址，需要根据情况进行地址的可视化  吴冰 2017.8.8 -->
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/address" />
+
+                    <TextView
+                        android:id="@+id/textViewAddress"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="36dip"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        android:id="@+id/textViewIDNoTitle"
+                        style="@style/CardInfoTitle"
+                        android:layout_width="60dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/idno" />
+
+                    <TextView
+                        android:id="@+id/textViewIDNo"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="20dip"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="60dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/agency" />
+
+                    <TextView
+                        android:id="@+id/textViewAgency"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="20dip"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="60dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/expire" />
+
+                    <TextView
+                        android:id="@+id/textViewExpire"
+                        style="@style/CardInfoText"
+                        android:layout_width="0dip"
+                        android:layout_height="20dip"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/GATPassportNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:singleLine="true"
+                        android:text="@string/passportNum" />
+
+                    <TextView
+                        android:id="@+id/textViewPassportNum"
+                        style="@style/CardInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/GATIssuanceTimes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/CardInfoTitle"
+                        android:layout_width="60dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="@string/issuanceTimes" />
+
+                    <TextView
+                        android:id="@+id/textViewIssuanceTimes"
+                        style="@style/CardInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dip" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/imageViewPortrait"
+                android:layout_width="68dip"
+                android:layout_height="85dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="6dip"
+                android:layout_marginTop="20dip"
+                android:contentDescription="@null"
+                android:src="@null" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip">
+
+            <TextView
+                style="@style/CardInfoTitle"
+                android:layout_width="90dip"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
+                android:layout_marginLeft="10dip"
+                android:text="@string/card_no" />
 
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="40dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/gender" />
-
-                <TextView
-                    android:id="@+id/textViewGender"
-                    style="@style/CardInfoText"
-                    android:layout_width="40dip"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/textViewNationTitle"
-                    style="@style/CardInfoTitle"
-                    android:layout_width="40dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/nation" />
-
-                <TextView
-                    android:id="@+id/textViewNation"
-                    style="@style/CardInfoText"
-                    android:layout_width="80dip"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="60dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/birthday" />
-
-                <TextView
-                    android:id="@+id/textViewYear"
-                    style="@style/CardInfoText"
-                    android:layout_width="35dip"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="20dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dip"
-                    android:text="@string/year" />
-
-                <TextView
-                    android:id="@+id/textViewMonth"
-                    style="@style/CardInfoText"
-                    android:layout_width="20dip"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="20dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dip"
-                    android:text="@string/month" />
-
-                <TextView
-                    android:id="@+id/textViewDay"
-                    style="@style/CardInfoText"
-                    android:layout_width="20dip"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="20dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dip"
-                    android:text="@string/day" />
-            </LinearLayout>
-
-            <!-- 外国人证没有地址，需要根据情况进行地址的可视化  吴冰 2017.8.8 -->
-
-            <LinearLayout
-                android:id="@+id/linearLayoutAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="40dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/address" />
-
-                <TextView
-                    android:id="@+id/textViewAddress"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
-                    android:layout_height="36dip"
-                    android:layout_weight="1.0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    android:id="@+id/textViewIDNoTitle"
-                    style="@style/CardInfoTitle"
-                    android:layout_width="60dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/idno" />
-
-                <TextView
-                    android:id="@+id/textViewIDNo"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
-                    android:layout_height="20dip"
-                    android:layout_weight="1.0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="60dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/agency" />
-
-                <TextView
-                    android:id="@+id/textViewAgency"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
-                    android:layout_height="20dip"
-                    android:layout_weight="1.0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="60dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/expire" />
-
-                <TextView
-                    android:id="@+id/textViewExpire"
-                    style="@style/CardInfoText"
-                    android:layout_width="0dip"
-                    android:layout_height="20dip"
-                    android:layout_weight="1.0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/GATPassportNum"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:visibility="gone" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:singleLine="true"
-                    android:text="@string/passportNum" />
-
-                <TextView
-                    android:id="@+id/textViewPassportNum"
-                    style="@style/CardInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dip" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/GATIssuanceTimes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:visibility="gone" >
-
-                <TextView
-                    style="@style/CardInfoTitle"
-                    android:layout_width="60dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/issuanceTimes" />
-
-                <TextView
-                    android:id="@+id/textViewIssuanceTimes"
-                    style="@style/CardInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dip" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textViewCardNo"
+                style="@style/CardInfoText"
+                android:layout_width="0dip"
+                android:layout_height="20dip"
+                android:layout_weight="1.0" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageViewPortrait"
-            android:layout_width="68dip"
-            android:layout_height="85dip"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="20dip"
-            android:contentDescription="@null"
-            android:src="@null" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip" >
-
-        <TextView
-            style="@style/CardInfoTitle"
-            android:layout_width="90dip"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:text="@string/card_no" />
-
-        <TextView
-            android:id="@+id/textViewCardNo"
-            style="@style/CardInfoText"
-            android:layout_width="0dip"
-            android:layout_height="20dip"
-            android:layout_weight="1.0" />
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/readCardCid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/readCardCid"
-        android:textSize="13sp" />
-
-    <LinearLayout
-        android:id="@+id/status_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="20dip"
-        android:layout_marginTop="20dip"
-        android:background="#c0c3c7"
-        android:gravity="center" >
-
-        <TextView
-            android:id="@+id/textViewStatus"
-            style="@style/StatusLabel"
+        <CheckBox
+            android:id="@+id/readCardCid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/readcard_hint" />
-    </LinearLayout>
+            android:text="@string/readCardCid"
+            android:textSize="13sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        <LinearLayout
+            android:id="@+id/status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="20dip"
+            android:background="#c0c3c7"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/buttonBack"
-            android:layout_width="115dip"
+            <TextView
+                android:id="@+id/textViewStatus"
+                style="@style/StatusLabel"
+                android:layout_width="wrap_content"
+                android:minHeight="48dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/colorAccent"
+                android:text="@string/readcard_hint" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="90dip"
-            android:text="返回" />
-    </LinearLayout>
+            android:visibility="gone"
+            android:orientation="vertical">
 
-      
-</LinearLayout>
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_width="115dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="90dip"
+                android:background="@color/colorblue"
+                android:text="返回" />
+        </LinearLayout>
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/circleProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:text="@string/check_count"
+        android:textColor="@color/colorblue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+</android.support.constraint.ConstraintLayout>

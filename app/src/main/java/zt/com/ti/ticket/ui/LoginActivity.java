@@ -8,12 +8,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import zt.com.ti.ticket.R;
-import zt.com.ti.ticket.entity.UserInfo;
+import zt.com.ti.ticket.entity.UserApiInfo;
 import zt.com.ti.ticket.repository.TicketRepository;
+import zt.com.ti.ticket.util.UserRepository;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,7 +34,9 @@ public class LoginActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         edt_user_name = findViewById(R.id.edt_user_name);
+        edt_user_name.setText(UserRepository.getUserID(this));
         edt_user_password  = findViewById(R.id.edt_user_password);
+        edt_user_password.setText(UserRepository.getUserPassword(this));
         btn_ok = findViewById(R.id.btn_ok);
         circleProgressBar = findViewById(R.id.circleProgressBar);
         btn_ok.setOnClickListener(new View.OnClickListener() {
@@ -53,16 +54,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 circleProgressBar.setVisibility(View.VISIBLE);
                 TicketRepository.login(idCard, password)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<UserInfo>() {
+                        .subscribe(new Consumer<UserApiInfo>() {
                             @Override
-                            public void accept(UserInfo userInfo) throws Exception {
+                            public void accept(UserApiInfo userInfo) throws Exception {
                                 if(!userInfo.isOk()){
                                     Toast.makeText(LoginActivity.this, userInfo.getMsg(), Toast.LENGTH_LONG).show();
+                                    gotoReadCardActivity();
                                 }
                                 else{
-                                    Toast.makeText(LoginActivity.this,"操作成功", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this,"登录成功", Toast.LENGTH_LONG).show();
+                                    gotoReadCardActivity();
                                     finish();
                                 }
                                 circleProgressBar.setVisibility(View.GONE);
@@ -70,11 +71,18 @@ public class LoginActivity extends AppCompatActivity {
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                Toast.makeText(LoginActivity.this, "出错了", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "出错了,请重试", Toast.LENGTH_LONG).show();
                                 circleProgressBar.setVisibility(View.GONE);
                             }
                         });
             }
         });
+    }
+
+    private void gotoReadCardActivity(){
+        String userName = edt_user_name.getEditableText().toString();
+        String password = edt_user_password.getEditableText().toString();
+        UserRepository.saveUser(this , userName ,password);
+        startActivity(ReadCardActivity.getIntent(this));
     }
 }

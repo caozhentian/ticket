@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitFactory {
 
-    private static final String BASE_URL = "https://np.xazhihe.cn/";
+    public static final String BASE_URL = "https://np.xazhihe.cn/";
     public static Retrofit retrofit;
 
     public static final Retrofit getRetrofitInstance() {

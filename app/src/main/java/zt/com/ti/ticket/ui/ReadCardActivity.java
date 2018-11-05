@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +29,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import zt.com.ti.ticket.R;
+import zt.com.ti.ticket.util.CheckCountRepository;
 
-public class ReadCardActivity extends AppCompatActivity implements OnClickListener {
+public class ReadCardActivity extends CheckActivity implements OnClickListener {
 	private final String TAG = "ReadCardActivity";
 	private static final String CARD_TYPE = "card_type";
 	private static final int CARD_TYPE_AUTO = 0;
@@ -65,6 +65,7 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 	private TextView mTextViewPassportNum, mTextViewIssuranceTimes;
 	private String cardNo;
 	private CheckBox mCheckBoxReadCardCid;
+	private TextView  mTvCount ;
 	// private String portName="/dev/ttyS4";
 	private String portName = "/dev/ttyMT1";
 	private int baudrate = 115200;
@@ -109,7 +110,13 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 				setTitle(R.string.typeB);
 				break;
 		}
-
+        super.initUI();
+		android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setTitle("核销");
+		}
+		mTvCount =  findViewById(R.id.tv_count);
+		mTvCount.setText(this.getResources().getString(R.string.check_count , CheckCountRepository.getCount(this)));
 		mTextViewPassportNum = (TextView) findViewById(R.id.textViewPassportNum);// 通行证号码
 		mTextViewIssuranceTimes = (TextView) findViewById(R.id.textViewIssuanceTimes);// 签发次数
 		mTextViewName = (TextView) findViewById(R.id.textViewName);
@@ -159,6 +166,9 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 			case  R.id.menu_manu_check :
 				startActivity(ForgetIdCardActivity.newIntent(this));
 				break;
+			case R.id.menu_setting:
+				startActivity(SettingActivity.newIntent(this));
+				break;
 		}
 		return true;
 	}
@@ -176,6 +186,12 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		mReadCardThread.cancel(false);
 	}
 
+	@Override
+	protected void next() {
+		mTextViewStatus.setText("本次核销成功");
+		CheckCountRepository.saveCount(this);
+		mTvCount.setText(this.getResources().getString(R.string.check_count , CheckCountRepository.getCount(this)));
+	}
 	private void updateIDCardInfo(boolean display) {
 		if (display) {
 			if (mCardInfo.cardType == CHINESE) {// 身份证
@@ -374,7 +390,9 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 					break;
 
 				case 3:
+				    //读取身份证成功
 					updateIDCardInfo(true);
+					check(mCardInfo.id);
 					break;
 
 				case 4:

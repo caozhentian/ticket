@@ -26,7 +26,7 @@
     <string name="idno_foreign">永久居留证号码</string>
     <string name="agency">签发机关</string>
     <string name="expire">有效期</string>
-    <string name="readcard_hint">请放卡</string>
+    <string name="readcard_hint">请将身份证放到读卡区域</string>
     <string name="finger_print">指纹</string>
     <string name="finger_print_summary">读取指纹信息</string>
     <string name="finger_print_hint">采集指纹</string>
@@ -34,5 +34,6 @@
     <string name="readCardCid">读取卡体管理号</string>
     <string name="passportNum">通行证号码</string>
     <string name="issuanceTimes">签发次数</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Ticket</string>
+    <string name="check_count">今天本机验票：%d人次</string>
 </resources>
