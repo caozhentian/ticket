@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -137,6 +138,12 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 		mCtrl = new Ctrl();
 		mDevModel = DeviceModel.valueOf(mCtrl.iDR_getDeviceModel());
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu); //解析menu布局文件到menu
+		return true;
 	}
 
 	@Override
