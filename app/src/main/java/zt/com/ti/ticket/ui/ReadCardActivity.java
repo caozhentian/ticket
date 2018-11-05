@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -61,6 +62,7 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 	private ImageView mImageViewPortrait;
 	private TextView mTextViewStatus;
 	private TextView mTextViewCardNo;
+	private TextView mTextViewPassportNum, mTextViewIssuranceTimes;
 	private String cardNo;
 	private CheckBox mCheckBoxReadCardCid;
 	// private String portName="/dev/ttyS4";
@@ -69,22 +71,22 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 	private Button buttonBack;
 	private DeviceModel mDevModel = DeviceModel.UNKNOWN;
 	private Ctrl mCtrl = null;
-	
-	//2017.8.8 加入外国人证信息界面根据不同卡的类型进行判断
+
+	// 2017.8.8 加入外国人证信息界面根据不同卡的类型进行判断
 	private LinearLayout linearLayoutChName;
-    private TextView mTextViewIName;
-	private LinearLayout linearLayoutAddress;
-	private static final int CHINESE='C';//读卡为中文类型
-	private static final int FOREIGN='I';//读卡为外国人证
+	private TextView mTextViewIName;
+	private LinearLayout linearLayoutAddress, linearlayoutGATPassportNum, linearlayoutGATIssuanceTimes;
+	private static final int CHINESE = 'C';// 读卡为中文类型
+	private static final int FOREIGN = 'I';// 读卡为外国人证
+	private static final int GAT = 'J';// 读卡港澳台通行证
 	private boolean is_need_IINSNDN = true;
 	private boolean is_found_card = false;
 
-	public static  final Intent getIntent(Context context){
-		Intent readCardIntent = new Intent(context, ReadCardActivity.class);
-		readCardIntent.putExtra(CARD_TYPE, CARD_TYPE_B) ;
-		return readCardIntent ;
+	public static final Intent getIntent(Context context){
+		Intent  readCardIntent = new Intent(context, ReadCardActivity.class);
+		readCardIntent.putExtra(CARD_TYPE, CARD_TYPE_B);
+		return readCardIntent;
 	}
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,23 +97,24 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		mCardType = extras.getInt(CARD_TYPE);
 
 		switch (mCardType) {
-		case CARD_TYPE_AUTO:
-			//setTitle(R.string.auto);
-			break;
+			case CARD_TYPE_AUTO:
+				setTitle(R.string.auto);
+				break;
 
-		case CARD_TYPE_A:
-			//setTitle(R.string.typeA);
-			break;
+			case CARD_TYPE_A:
+				setTitle(R.string.typeA);
+				break;
 
-		case CARD_TYPE_B:
-			//setTitle(R.string.typeB);
-			setTitle("");
-			break;
+			case CARD_TYPE_B:
+				setTitle(R.string.typeB);
+				break;
 		}
 
+		mTextViewPassportNum = (TextView) findViewById(R.id.textViewPassportNum);// 通行证号码
+		mTextViewIssuranceTimes = (TextView) findViewById(R.id.textViewIssuanceTimes);// 签发次数
 		mTextViewName = (TextView) findViewById(R.id.textViewName);
 		mTextViewGender = (TextView) findViewById(R.id.textViewGender);
-		mTextViewNationTitle=(TextView) findViewById(R.id.textViewNationTitle);
+		mTextViewNationTitle = (TextView) findViewById(R.id.textViewNationTitle);
 		mTextViewNation = (TextView) findViewById(R.id.textViewNation);
 		mTextViewYear = (TextView) findViewById(R.id.textViewYear);
 		mTextViewMonth = (TextView) findViewById(R.id.textViewMonth);
@@ -124,10 +127,12 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		mImageViewPortrait = (ImageView) findViewById(R.id.imageViewPortrait);
 		mTextViewStatus = (TextView) findViewById(R.id.textViewStatus);
 		mTextViewCardNo = (TextView) findViewById(R.id.textViewCardNo);
-		linearLayoutChName=(LinearLayout) findViewById(R.id.linearLayoutChName);
-		mTextViewIName=(TextView) findViewById(R.id.textViewIName);
-		linearLayoutAddress=(LinearLayout) findViewById(R.id.linearLayoutAddress);
-		mCheckBoxReadCardCid=(CheckBox) findViewById(R.id.readCardCid);
+		linearLayoutChName = (LinearLayout) findViewById(R.id.linearLayoutChName);
+		mTextViewIName = (TextView) findViewById(R.id.textViewIName);
+		linearLayoutAddress = (LinearLayout) findViewById(R.id.linearLayoutAddress);
+		linearlayoutGATPassportNum = (LinearLayout) findViewById(R.id.GATPassportNum);
+		linearlayoutGATIssuanceTimes = (LinearLayout) findViewById(R.id.GATIssuanceTimes);
+		mCheckBoxReadCardCid = (CheckBox) findViewById(R.id.readCardCid);
 		buttonBack = (Button) findViewById(R.id.buttonBack);
 		buttonBack.setOnClickListener(this);
 
@@ -142,7 +147,19 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu); //解析menu布局文件到menu
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch(item.getItemId()) //得到被点击的item的itemId
+		{
+			case  R.id.menu_manu_check :
+				startActivity(ForgetIdCardActivity.newIntent(this));
+				break;
+		}
 		return true;
 	}
 
@@ -161,69 +178,84 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 	private void updateIDCardInfo(boolean display) {
 		if (display) {
-			if(mCardInfo.cardType==CHINESE){
+			if (mCardInfo.cardType == CHINESE) {// 身份证
 				mTextViewName.setText(mCardInfo.name);
 				mTextViewNationTitle.setText(R.string.nation);
-			    linearLayoutChName.setVisibility(View.GONE);
-			    mTextViewIDNoTitle.setText(R.string.idno);
-			    linearLayoutAddress.setVisibility(View.VISIBLE);
-			}else if(mCardInfo.cardType==FOREIGN){
+				linearlayoutGATPassportNum.setVisibility(View.GONE);// 通行证号码
+				linearlayoutGATIssuanceTimes.setVisibility(View.GONE);// 签发次数
+				linearLayoutChName.setVisibility(View.GONE);
+				mTextViewIDNoTitle.setText(R.string.idno);
+				linearLayoutAddress.setVisibility(View.VISIBLE);
+			} else if (mCardInfo.cardType == FOREIGN) {// 外国人证
 				linearLayoutAddress.setVisibility(View.GONE);
-    	    	linearLayoutChName.setVisibility(View.VISIBLE);
-    	    	mTextViewName.setText(mCardInfo.englishName);
-    	    	mTextViewIName.setText(mCardInfo.name);
- 			    mTextViewNationTitle.setText(R.string.nation_ex);			 
- 			    mTextViewIDNoTitle.setText(R.string.idno_foreign);
+				linearlayoutGATPassportNum.setVisibility(View.GONE);// 通行证号码
+				linearlayoutGATIssuanceTimes.setVisibility(View.GONE);// 签发次数
+				linearLayoutChName.setVisibility(View.VISIBLE);
+				mTextViewName.setText(mCardInfo.englishName);
+				mTextViewIName.setText(mCardInfo.name);
+				mTextViewNationTitle.setText(R.string.nation_ex);
+				mTextViewIDNoTitle.setText(R.string.idno_foreign);
+			} else if (mCardInfo.cardType == GAT) {// 港澳通行证
+				linearLayoutAddress.setVisibility(View.VISIBLE);
+				linearlayoutGATPassportNum.setVisibility(View.VISIBLE);// 通行证号码
+				linearlayoutGATIssuanceTimes.setVisibility(View.VISIBLE);// 签发次数
+				mTextViewName.setText(mCardInfo.name);
+				mTextViewPassportNum.setText(mCardInfo.passportNum);
+				mTextViewIssuranceTimes.setText(mCardInfo.issuanceTimes);
 			}
-			    mTextViewCardNo.setText(cardNo.toUpperCase());
-			    mTextViewStatus.setText(mStrStatus);
-			    mTextViewGender.setText(mCardInfo.gender);
-				mTextViewNation.setText(mCardInfo.nation);
-				mTextViewYear.setText(mCardInfo.birthday.substring(0, 4));
-				mTextViewMonth.setText(mCardInfo.birthday.substring(4, 6));
-				mTextViewDay.setText(mCardInfo.birthday.substring(6, 8));
-				if(mCardInfo.address!=null){
-					mTextViewAddress.setText(mCardInfo.address);
-				}
-				mTextViewIDNo.setText(mCardInfo.id);
-				if(mCardInfo.agency!=null){
-					mTextViewAgency.setText(mCardInfo.agency);
-				}
-				if(isExpire(mCardInfo.expireEnd)){
-					mTextViewExpire.setTextColor(Color.RED);
-					mTextViewExpire.setText(mCardInfo.expireStart + " - " + mCardInfo.expireEnd+"(过期)");
-				}else{
-					mTextViewExpire.setTextColor(Color.BLACK);
-	    			mTextViewExpire.setText(mCardInfo.expireStart + " - " + mCardInfo.expireEnd);
-				}
-				mImageViewPortrait.setImageBitmap(mCardInfo.photo);
+			mTextViewCardNo.setText(cardNo.toUpperCase());
+			mTextViewStatus.setText(mStrStatus);
+			mTextViewGender.setText(mCardInfo.gender);
+			mTextViewNation.setText(mCardInfo.nation);
+			mTextViewYear.setText(mCardInfo.birthday.substring(0, 4));
+			mTextViewMonth.setText(mCardInfo.birthday.substring(4, 6));
+			mTextViewDay.setText(mCardInfo.birthday.substring(6, 8));
+			if (mCardInfo.address != null) {
+				mTextViewAddress.setText(mCardInfo.address);
+			}
+			mTextViewIDNo.setText(mCardInfo.id);
+			if (mCardInfo.agency != null) {
+				mTextViewAgency.setText(mCardInfo.agency);
+			}
+			if (isExpire(mCardInfo.expireEnd)) {
+				mTextViewExpire.setTextColor(Color.RED);
+				mTextViewExpire.setText(mCardInfo.expireStart + " - " + mCardInfo.expireEnd + "(过期)");
+			} else {
+				mTextViewExpire.setTextColor(Color.BLACK);
+				mTextViewExpire.setText(mCardInfo.expireStart + " - " + mCardInfo.expireEnd);
+			}
+			mImageViewPortrait.setImageBitmap(mCardInfo.photo);
 		} else {
 			mTextViewCardNo.setText("");
-		    mTextViewStatus.setText(mStrStatus);
+			mTextViewStatus.setText(mStrStatus);
 			linearLayoutAddress.setVisibility(View.VISIBLE);
-    		linearLayoutChName.setVisibility(View.GONE);
-    		mTextViewNationTitle.setText(R.string.nation);	
-	    	mTextViewName.setText("");
+			linearLayoutChName.setVisibility(View.GONE);
+			mTextViewNationTitle.setText(R.string.nation);
+			mTextViewName.setText("");
 			mTextViewGender.setText("");
 			mTextViewNation.setText("");
 			mTextViewYear.setText("");
 			mTextViewMonth.setText("");
 			mTextViewDay.setText("");
-			mTextViewAddress.setText("");				
+			mTextViewAddress.setText("");
 			mTextViewIDNoTitle.setText(R.string.idno);
 			mTextViewIDNo.setText("");
-			mTextViewAgency.setText("");		
+			mTextViewAgency.setText("");
 			mTextViewExpire.setText("");
+			mTextViewPassportNum.setText("");
+			mTextViewIssuranceTimes.setText("");
 			mImageViewPortrait.setImageBitmap(null);
 		}
 	}
 
-	
-	/**吴冰 2017.8.8 根据A卡是否显示将界面进行调整
-	 * @param display A卡是否显示
+	/**
+	 * 吴冰 2017.8.8 根据A卡是否显示将界面进行调整
+	 *
+	 * @param display
+	 *            A卡是否显示
 	 */
 	private void updateTypeAInfo(boolean display) {
-		
+
 		linearLayoutChName.setVisibility(View.GONE);
 		linearLayoutAddress.setVisibility(View.VISIBLE);
 		mTextViewName.setText("");
@@ -239,10 +271,10 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		mImageViewPortrait.setImageBitmap(null);
 		mTextViewCardNo.setText("");
 		mTextViewStatus.setText(mStrStatus);
-		if (display){
+		if (display) {
 			mTextViewIDNoTitle.setText(R.string.idno_A);
 			mTextViewIDNo.setText(mStrCardNo.toUpperCase());
-		}else{
+		} else {
 			mTextViewIDNoTitle.setText(R.string.idno);
 			mTextViewIDNo.setText("");
 		}
@@ -265,25 +297,20 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 			}
 
 			mStrStatus = "打开端口成功";
-			byte[] CMD_GET_VER = new byte[] { (byte) 0xff, (byte) 0x97, 0x10,
-					0x10, 0x00 };// 获取单片机版本号命令
+			byte[] CMD_GET_VER = new byte[] { (byte) 0xff, (byte) 0x97, 0x10, 0x10, 0x00 };// 获取单片机版本号命令
 			byte[] out_data = new byte[6];
-			ret = mReader.RTN_GetMcuVersion(CMD_GET_VER, CMD_GET_VER.length,
-					out_data, out_data.length);
+			ret = mReader.RTN_GetMcuVersion(CMD_GET_VER, CMD_GET_VER.length, out_data, out_data.length);
 			// Log.d("TAG","mReader.RTN_GetMcuVersion end");
 			if (ret == 0) {
 				// Log.d("getMcuVersion",String.format("%02x,%02x,%02x",
 				// out_data[0],out_data[1],out_data[2]));
-				String mcu_16 = String.format("%02x,%02x,%02x", out_data[0],
-						out_data[1], out_data[2]);
+				String mcu_16 = String.format("%02x,%02x,%02x", out_data[0], out_data[1], out_data[2]);
 				String[] mcu_array = new String[3];
 				mcu_array = mcu_16.split(",");
 				// mcu_ver = "V" + Integer.toString(out_data[0]) + "." +
 				// Integer.toString(out_data[1])+ "." +
 				// Integer.toString(out_data[2]);
-				String mcu_ver = "V" + Integer.valueOf(mcu_array[0], 16) + "."
-						+ Integer.valueOf(mcu_array[1], 16) + "."
-						+ Integer.valueOf(mcu_array[2], 16);
+				String mcu_ver = "V" + Integer.valueOf(mcu_array[0], 16) + "." + Integer.valueOf(mcu_array[1], 16) + "." + Integer.valueOf(mcu_array[2], 16);
 				Log.d(TAG, "mcu_ver " + mcu_ver);
 			}
 
@@ -294,6 +321,10 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 			// }
 
 			SystemClock.sleep(SAMPOWER_TIME);
+
+			// Reader.SAMIDInfo samInfo = mReader.new SAMIDInfo();
+			// mReader.SDT_GetSAMIDToStr(samInfo);
+			// Log.d(TAG,"samInfo is " + samInfo.SAMID);
 			//
 			// mStrStatus = "安全模块上电成功";
 			//
@@ -311,17 +342,17 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 				SystemClock.sleep(READCARD_INTERVAL);
 
 				switch (cardType) {
-				case CARD_TYPE_A:
-					ReadTypeA();
-					break;
+					case CARD_TYPE_A:
+						ReadTypeA();
+						break;
 
-				case CARD_TYPE_B:
-					ReadTypeB();
-					break;
+					case CARD_TYPE_B:
+						ReadTypeB();
+						break;
 
-				default:
-					ReadTypeAB();
-					break;
+					default:
+						ReadTypeAB();
+						break;
 				}
 			}
 
@@ -334,21 +365,21 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 		protected void onProgressUpdate(Integer... progress) {
 			switch (progress[0]) {
-			case 1:
-				updateTypeAInfo(true);
-				break;
+				case 1:
+					updateTypeAInfo(true);
+					break;
 
-			case 2:
-				updateTypeAInfo(false);
-				break;
+				case 2:
+					updateTypeAInfo(false);
+					break;
 
-			case 3:
-				updateIDCardInfo(true);
-				break;
+				case 3:
+					updateIDCardInfo(true);
+					break;
 
-			case 4:
-				updateIDCardInfo(false);
-				break;
+				case 4:
+					updateIDCardInfo(false);
+					break;
 			}
 		}
 
@@ -405,23 +436,23 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		}
 
 		/**
-		 * 读身份证基本信息和卡体管理号的原则：
-		 * 1. USB读卡器(iDR410,iDR410-1,iDR500):
-		 * RTN_ReadNewAppMsg->RTN_Authenticate->SDT_ReadIINSNDN->SDT_ReadBaseMsg
-		 * 2. 串口读卡器(iDR420,iDR420-1,iDR500-1):
+		 * 读身份证基本信息和卡体管理号的原则： 1. USB读卡器(iDR410,iDR410-1,iDR500):
+		 * RTN_ReadNewAppMsg->RTN_Authenticate->SDT_ReadIINSNDN->SDT_ReadBaseMsg 2.
+		 * 串口读卡器(iDR420,iDR420-1,iDR500-1):
 		 * RTN_ReadNewAppMsg->SDT_ReadIINSNDN->SDT_ReadBaseMsg
+		 *
 		 * @return
 		 */
 		private int ReadTypeB() {
 			int ret;
 			byte[] data = new byte[2400];
-            is_need_IINSNDN=mCheckBoxReadCardCid.isChecked();
+			is_need_IINSNDN = mCheckBoxReadCardCid.isChecked();
 			if (mReadStatus == 1 || mReadStatus == 2) {
 				Reader.MoreAddrInfo addrInfo = mReader.new MoreAddrInfo();
 				ret = mReader.RTN_ReadNewAppMsg(addrInfo);
 				if (ret < 0) { // Card removed
 					mReadStatus = 0;
-					mStrStatus = "身份证已移走";
+					mStrStatus = "卡片已移走";
 					publishProgress(4);
 
 					return 4;
@@ -430,64 +461,57 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 					return 3;
 				}
-			} else {//end if (mReadStatus == 1 || mReadStatus == 2) 
-				//需要读卡体管理号时，分型号处理
-				if(is_need_IINSNDN){
-					//USB型设备
-					if (   mDevModel.equals(DeviceModel.iDR410)
-						|| mDevModel.equals(DeviceModel.iDR410_1)
-						|| mDevModel.equals(DeviceModel.iDR500)
-						) {
+			} else {// end if (mReadStatus == 1 || mReadStatus == 2)
+				// 需要读卡体管理号时，分型号处理
+				if (is_need_IINSNDN) {
+					// USB型设备
+					if (mDevModel.equals(DeviceModel.iDR410) || mDevModel.equals(DeviceModel.iDR410_1) || mDevModel.equals(DeviceModel.iDR500)) {
 						ret = mReader.RTN_Authenticate();
-						if (ret == 0){
+						if (ret == 0) {
 							is_found_card = true;
-						}else{
+						} else {
 							is_found_card = false;
 						}
-					}//end USB设备
+					} // end USB设备
 
 					// 读卡体管理号
 					byte[] data_no = new byte[8];
 					int retNo = 0;
-					//串口型设备，读卡体管理号时：找卡->选卡->读卡体管理号
-					if (   mDevModel.equals(DeviceModel.iDR420)
-							||mDevModel.equals(DeviceModel.CI_14T)
-						|| mDevModel.equals(DeviceModel.iDR420_1)
-						|| mDevModel.equals(DeviceModel.iDR500_1)
-							) {
+					// 串口型设备，读卡体管理号时：找卡->选卡->读卡体管理号
+					if (mDevModel.equals(DeviceModel.iDR420) || mDevModel.equals(DeviceModel.CI_14T) || mDevModel.equals(DeviceModel.iDR420_1) || mDevModel.equals(DeviceModel.iDR500_1)) {
 						// 读卡体管理号
 						retNo = mReader.SDT_ReadIINSNDN(data_no);
 						cardNo = "";
-						if (retNo > 0){
+						if (retNo > 0) {
 							for (int i = 0; i < data_no.length; i++) {
 								cardNo += String.format("%02x", data_no[i]);
 							}
 							is_found_card = true;
-						}else{
+						} else {
 							is_found_card = false;
 						}
-					}else{//end 串口设备
-						//USB型设备，读卡体管理号时：仅读卡体管理号
-						if(is_found_card){
+					} else {// end 串口设备
+						// USB型设备，读卡体管理号时：仅读卡体管理号
+						if (is_found_card) {
 							retNo = mReader.SDT_ReadIINSNDN(data_no);
 							cardNo = "";
-							if (retNo > 0){
+							if (retNo > 0) {
 								for (int i = 0; i < data_no.length; i++) {
 									cardNo += String.format("%02x", data_no[i]);
 								}
 							}
-						}//end if(is_found_card)				
-					}//end else 串口设备
-				}else{
-					//不需要读卡体管理号时，直接找卡、选卡
+						} // end if(is_found_card)
+					} // end else 串口设备
+				} else {
+					// 不需要读卡体管理号时，直接找卡、选卡
 					ret = mReader.RTN_Authenticate();
-					if (ret == 0){
+					if (ret == 0) {
 						is_found_card = true;
-					}else{
+					} else {
 						is_found_card = false;
 					}
-					cardNo="";
-				}//end else 不需要读卡体管理号
+					cardNo = "";
+				} // end else 不需要读卡体管理号
 
 				if (is_found_card) { // Found card
 					ret = mReader.SDT_ReadBaseMsg(data);
@@ -508,8 +532,8 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 						return 2;
 					}
-				}//end if (is_found_card) { // Found card
-			}//end if (mReadStatus == 1 || mReadStatus == 2) else
+				} // end if (is_found_card) { // Found card
+			} // end if (mReadStatus == 1 || mReadStatus == 2) else
 
 			return 0;
 		}
@@ -550,7 +574,7 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 		}
 
 		private void DecodeBaseMsg(byte[] data) {
-			//Log.d(TAG, "DecodeBaseMsg " + Utils.toHexString(data, data.length));
+			// Log.d(TAG, "DecodeBaseMsg " + Utils.toHexString(data, data.length));
 			// parse data
 			ByteBuffer buffer = ByteBuffer.wrap(data);
 			buffer.order(ByteOrder.BIG_ENDIAN);
@@ -566,9 +590,9 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 
 			buffer.get(msg, 0, mlen);
 			buffer.get(photo, 0, plen);
-            
-			//吴冰 2017.8.9 在此处进行mCardInfo的初始化，因为mCardInfo是全局变量这样会存储上次刷卡的信息
-			mCardInfo=mReader.new IDCardInfo();
+
+			// 吴冰 2017.8.9 在此处进行mCardInfo的初始化，因为mCardInfo是全局变量这样会存储上次刷卡的信息
+			mCardInfo = mReader.new IDCardInfo();
 			Reader.RTN_DecodeBaseMsg(msg, mCardInfo);
 
 			System.arraycopy(photo, 0, mWltData, 0, plen);
@@ -596,7 +620,7 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 			buffer.get(photo, 0, plen);
 			buffer.get(fingerPrint, 0, flen);
 
-			mCardInfo=mReader.new IDCardInfo();
+			mCardInfo = mReader.new IDCardInfo();
 			Reader.RTN_DecodeBaseMsg(msg, mCardInfo);
 
 			System.arraycopy(photo, 0, mWltData, 0, plen);
@@ -614,25 +638,27 @@ public class ReadCardActivity extends AppCompatActivity implements OnClickListen
 			finish();
 		}
 	}
-	
-	/**吴冰 2017.8.8 判断身份证是否过期
+
+	/**
+	 * 吴冰 2017.8.8 判断身份证是否过期
+	 *
 	 * @param expireEnd
 	 * @return
 	 */
 	private boolean isExpire(String expireEnd) {
-		if(expireEnd.startsWith("长期")){
+		if (expireEnd.startsWith("长期")) {
 			return false;
-		}else{
-    		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        	Calendar cal = Calendar.getInstance();
-        	try { 
-        		cal.setTime(format.parse(expireEnd)); 
-        	} catch (ParseException e) {
-        		e.printStackTrace();
-        		return false;
-        	} 
-        	cal.roll(Calendar.DAY_OF_MONTH, 1);
-        	return cal.getTime().compareTo(new Date()) < 0;
+		} else {
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			Calendar cal = Calendar.getInstance();
+			try {
+				cal.setTime(format.parse(expireEnd));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			}
+			cal.roll(Calendar.DAY_OF_MONTH, 1);
+			return cal.getTime().compareTo(new Date()) < 0;
 		}
-	} 
+	}
 }

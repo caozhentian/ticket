@@ -1,5 +1,7 @@
 package zt.com.ti.ticket.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goto(){
-        startActivity(ReadCardActivity.getIntent(this))
+        startActivity(ReadCardActivity.getIntent(this));
     }
     fun test(){
         TicketRepository.check("1" ,"11113434")
@@ -53,4 +55,6 @@ class MainActivity : AppCompatActivity() {
                         it.message
                 })
     }
+
+
 }

@@ -32,4 +32,7 @@
     <string name="finger_print_hint">采集指纹</string>
     <string name="card_no">卡体管理号:</string>
     <string name="readCardCid">读取卡体管理号</string>
+    <string name="passportNum">通行证号码</string>
+    <string name="issuanceTimes">签发次数</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

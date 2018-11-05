@@ -1,6 +1,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
+    <item android:id="@+id/menu_manu_check"
         android:title="手动核销"
         android:orderInCategory="100"
         app:showAsAction="never" />
